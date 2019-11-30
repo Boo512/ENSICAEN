@@ -5,7 +5,7 @@
 # F-14050 Caen Cedex
 #
 # Author: Jules Klein <klein@ecole.ensicaen.fr>
-# Version 1.0 30/10/2019
+# Version 2.0 29/11/2019
 #
 #
 # This script manages creation, deletion, archiving and compilation of
@@ -13,7 +13,7 @@
 #
 #
 # use : ./cprojman.sh
-
+#
 # TODO : add check for existence of sethc.sh
 
 menu () {
@@ -24,6 +24,8 @@ menu () {
     echo "C|c) compile a project"
     echo "A|a) archive a project"
     echo "E|e) exit"
+    echo "NOTE : please use absolute paths instead of realitve ones"
+    echo "else you might end up with files in weird places"
 }
 
 delete () {
@@ -70,7 +72,8 @@ create () {
     echo "Enter the name of the project"
     read name
 
-    cur_path=$(pwd)
+    cur_wd_temp=$(readlink -f "$0")
+    cur_wd=$(dirname "${cur_wd_temp}")
     
     cd ${path}
     mkdir ${name}
@@ -86,7 +89,7 @@ create () {
     cd source
     touch main.c
 
-    ${cur_path}/sethc.sh main.c
+    ${cur_wd}/sethc.sh -c main.c
 
     echo "${path}/${name} files created."
 }
